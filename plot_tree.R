@@ -9,7 +9,7 @@ spec <- matrix(c('phylo', 't', 1, "character", 'output', 'o', 1, "character"), b
 opt <- getopt(spec)
 
 #Read rooted tree file
-tree <- read.newick(opt$phylo)
+tree <- read.tree(opt$phylo)
 
 #Create tree object
 if(tree$Nnode<80) {
