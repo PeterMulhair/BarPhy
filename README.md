@@ -22,3 +22,19 @@ BarcodePlacer can be run in two ways:
 2. With a fasta file with a barcode sequence named as EXID and a query species/genus to search against
 
   - `python barcode_queries.py --query EXID.fasta REXID`
+
+The script also requires certain directories. Both require a dir called `output/`. To run the `--query` version, place your fasta files in a directory called `queries/`
+
+## Examples
+
+Using the fasta files from `queries/` you can ID the barcode sequences using the `--query` version (the `--barcode` version can be run using the excel sheet in `data/`)
+
+First make output dir with `mkdir output`
+
+Then run script
+eg. `python barcode_queries.py --query queries/Melangyna_labiatarum.fasta Melangyna_compositarum`
+OR
+eg. `python barcode_queries.py --query queries/Melangyna_labiatarum.fasta Melangyna_` to search against the REXID genus rather than species.
+
+
+**NOTE** for `--query` version the input is required as the species bionomial name or genus separated by an underscore eg. Drosophila_melanogaster or Drosophila_
