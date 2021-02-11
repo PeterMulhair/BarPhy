@@ -18,7 +18,7 @@ This script is required when an expected species ID does not match the result sp
 
 ## Usage
 
-BarcodePlacer can be run in two ways:
+BarPhy can be run in two ways:
 
 1. With an excel sheet or csv file of barcode results as input (see the excel sheet in [data/](https://github.com/PeterMulhair/BarcodePlacer/tree/main/data))
 
