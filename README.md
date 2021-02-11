@@ -13,8 +13,8 @@ BarcodePlacer can be run in two ways:
 
 1. With an excel sheet of barcode results as input
 
-- `python barcode_queries.py --barcode Barcoding_results.xlsx`
+  - `python barcode_queries.py --barcode Barcoding_results.xlsx`
 
 2. With a fasta file with a barcode sequence named as EXID and a query species/genus to search against
 
-- `python barcode_queries.py --query EXID.fasta REXID`
+  - `python barcode_queries.py --query EXID.fasta REXID`
