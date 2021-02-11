@@ -19,7 +19,7 @@ This script is required when an expected species ID does not match the result sp
 
 BarcodePlacer can be run in two ways:
 
-1. With an excel sheet of barcode results as input
+1. With an excel sheet of barcode results as input (see the excel sheet in data/)
 
   - `python barcode_queries.py --barcode Barcoding_results.xlsx`
 
