@@ -59,7 +59,7 @@ $ python barcode_queries.py --query queries/Melangyna_labiatarum.fasta Melangyna
 
 **Output**
 
-For `--query` runs, the query species will be labelled with `_query` in the output tree image.
+For `--query` runs, the query species will be labelled with `_query` in the output tree image (labelled with `_DToL` in `--barcode` version). 
 
 <div align="center">
 <p align="center">
