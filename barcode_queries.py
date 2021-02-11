@@ -227,8 +227,8 @@ else:#If using specific queries, run pipeline
 
     if query_sp2.split('_')[1] == '':
         tree_build('output/' + query_sp.split('.fa')[0] + '_genus_query')
-        print('\nComplete; output files can be found in output/', query_sp.split('.fa')[0], '_genus_query')
+        print('\nComplete; output files can be found in output/' + query_sp.split('.fa')[0] + '_genus_query')
     else:
         tree_build('output/' + query_sp.split('.fa')[0] + '_query')
-        print('\nComplete; output files can be found in output/', query_sp.split('.fa')[0], '_query')
+        print('\nComplete; output files can be found in output/' + query_sp.split('.fa')[0] + '_query')
 
