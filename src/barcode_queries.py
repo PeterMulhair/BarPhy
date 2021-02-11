@@ -45,6 +45,8 @@ def data_download(barcode_results):
         barcode_results = args.barcode.split('.xlsx')[0]
         data_xls = pd.read_excel(args.barcode, dtype=str, index_col=None)
         data_xls.to_csv(barcode_results + '.csv', encoding='utf-8', index=False)
+    elif args.barcode.lower().endswith('.csv'):
+        barcode_results = args.barcode.split('.csv')[0]
     else:
         print('Error:')
         print('Excel file required as input')
