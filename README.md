@@ -1,5 +1,7 @@
 # BarPhy
 
+**Bar**code **Phy**logenetics
+
 <div align="center">
 <p align="center">
 <img src="https://github.com/PeterMulhair/BarcodePlacer/blob/master/data/barcode_logo.png" width="500" height="250">
