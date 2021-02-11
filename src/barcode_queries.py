@@ -214,8 +214,8 @@ def tree_build(query):
 if args.barcode:#If parsing barcode excel file, run pipeline
     data_download(args.barcode)
     
-    Parallel(n_jobs=46)(delayed(tree_build)('output/' + query) for query in query_list)
-
+    Parallel(n_jobs=5)(delayed(tree_build)('output/' + query) for query in query_list)
+    print('\n\n\nComplete; output directories for batch job  can be found in output/')
     
 else:#If using specific queries, run pipeline
     query_sp = args.query[0][0]
@@ -227,6 +227,8 @@ else:#If using specific queries, run pipeline
 
     if query_sp2.split('_')[1] == '':
         tree_build('output/' + query_sp.split('.fa')[0] + '_genus_query')
+        print('\nComplete; output files can be found in output/' + query_sp.split('.fa')[0] + '_genus_query')
     else:
         tree_build('output/' + query_sp.split('.fa')[0] + '_query')
+        print('\nComplete; output files can be found in output/' + query_sp.split('.fa')[0] + '_query')
 
