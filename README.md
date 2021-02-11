@@ -29,6 +29,8 @@ BarcodePlacer can be run in two ways:
 
 The script also requires certain directories. Both require a dir called `output/`. To run the `--query` version, place your fasta files in a directory called `queries/`
 
+**Output**
+
 The output folder consists of a number of files including raw fasta, MSA, and tree output files.
 The tree image file, ending in .pdf, is what you want to check to see where your barcode query fits in the tree. 
 
