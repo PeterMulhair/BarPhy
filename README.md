@@ -58,6 +58,7 @@ $ python barcode_queries.py --query queries/Melangyna_labiatarum.fasta Melangyna
 **NOTE** for `--query` version the input is required as the species bionomial name, or genus, separated by an underscore eg. Drosophila_melanogaster or Drosophila_
 
 **Output**
+
 For `--query` runs, the query species will be labelled with `_query` in the output tree image.
 
 <div align="center">
