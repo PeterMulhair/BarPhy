@@ -1,4 +1,4 @@
-# BarcodePlacer
+# BarPhy
 
 <div align="center">
 <p align="center">
