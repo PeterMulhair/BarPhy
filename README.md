@@ -13,6 +13,7 @@ This script is required when an expected species ID does not match the result sp
 * python3
 * Mafft - [install](https://mafft.cbrc.jp/alignment/software/source.html)
 * IQTree - [install](http://www.iqtree.org/doc/Quickstart)
+* Python modules; pandas, os, glob, argparse, subprocess, ete3, Bio, joblib. If you get an error for any of these, install using `pip` before running script.
 
 ## Usage
 
