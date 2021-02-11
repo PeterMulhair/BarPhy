@@ -1,7 +1,10 @@
 # BarcodePlacer
 
+<div align="center">
+<p align="center">
 <img src="https://github.com/PeterMulhair/BarcodePlacer/blob/master/data/barcode_logo.png" width="500" height="250">
-
+</p>
+</div>
 
 This script is required when an expected species ID does not match the result species/genus ID from a sequence similarity search agains the [BOLD](https://www.boldsystems.org/index.php) database. It requires a merged barcode sequence as input, along with an expected species ID (EXID) and a result species/genus ID (REXID). Using the BOLD API it pulls down barcode data for EXID and REXID, creates a multiple sequence alignment, and constructed a phylogenetic tree. The output is a pdf image of the tree, where the identification of the barcode query can be confidently assigned in a phylogenetic context. 
 
