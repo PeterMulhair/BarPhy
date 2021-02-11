@@ -114,19 +114,6 @@ def data_download_user(query, species):
     sequence for the query species and related species specified
     '''
 
-    '''
-    print(query, species)
-    PASS = False
-    if '_' in query:
-        Pass = True
-    elif '_' in species:
-        Pass = True
-    else:
-        print('ERROR: check your input format. Species names should be separated by and underscore eg. Drosophila_melanogastor, or Drosophila_')
-        return None
-    if Pass = True
-    '''
-    
     sp_query = query.split('.fa')[0]
     if species.split('_')[1] == '':
         os.mkdir('output/' + sp_query + '_genus_query')
@@ -220,7 +207,6 @@ def tree_build(query):
         unix('Rscript ' + pwd + '/plot_tree.R -t ' + rooted_tree + ' -o ' + queryID + '_tree.pdf > /dev/null 2>&1', shell=True)
     
     os.chdir(pwd)
-    #func_pass+=1
 
 
 if args.barcode:#If parsing barcode excel file, run pipeline
@@ -228,8 +214,6 @@ if args.barcode:#If parsing barcode excel file, run pipeline
     
     Parallel(n_jobs=46)(delayed(tree_build)('output/' + query) for query in query_list)
 
-    #if func_pass > 0:
-        #print('\n\n\nPhylogue complete without errors :)\n')
     
 else:#If using specific queries, run pipeline
     query_sp = args.query[0][0]
@@ -244,5 +228,3 @@ else:#If using specific queries, run pipeline
     else:
         tree_build('output/' + query_sp.split('.fa')[0] + '_query')
 
-    #if func_pass > 0:
-        #print('\n\n\nPhylogue complete without errors :)\n')
