@@ -23,11 +23,14 @@ BarcodePlacer can be run in two ways:
 
   - `python barcode_queries.py --barcode Barcoding_results.xlsx`
 
-2. With a fasta file with a barcode sequence named as EXID and a query species/genus to search against
+2. With a fasta file containing a barcode sequence named as EXID and a query species/genus to search against
 
   - `python barcode_queries.py --query EXID.fasta REXID`
 
 The script also requires certain directories. Both require a dir called `output/`. To run the `--query` version, place your fasta files in a directory called `queries/`
+
+The output folder consists of a number of files including raw fasta, MSA, and tree output files.
+The tree image file, ending in .pdf, is what you want to check to see where your barcode query fits in the tree. 
 
 ## Examples
 
@@ -35,7 +38,7 @@ Using the fasta file from `queries/` you can ID the barcode sequences using the 
 
 First make output dir with `mkdir output`
 
-Then run script
+Then run the script:
 
 ```
 
