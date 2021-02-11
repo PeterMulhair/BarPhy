@@ -4,17 +4,17 @@ This script is required when an expected species ID does not match the result sp
 ## Requirements
 
 * python3
-* BLAST+ suite - [install for command line](https://www.ncbi.nlm.nih.gov/books/NBK279671/)
-* MMseqs - [install](https://github.com/soedinglab/MMseqs2#installation)
+* Mafft - [install](https://mafft.cbrc.jp/alignment/software/source.html)
+* IQTree - [install](http://www.iqtree.org/doc/Quickstart)
 
 ## Usage
 
 BarcodePlacer can be run in two ways:
 
-    1. With an excel sheet of barcode results as input
+1. With an excel sheet of barcode results as input
 
-    `python barcode_queries.py --barcode Barcoding_results.xlsx`
+`python barcode_queries.py --barcode Barcoding_results.xlsx`
 
-    2. With a fasta file with a barcode sequence named as EXID and a query species/genus to search against
+2. With a fasta file with a barcode sequence named as EXID and a query species/genus to search against
 
-    `python barcode_queries.py --query EXID.fasta REXID`
+`python barcode_queries.py --query EXID.fasta REXID`
