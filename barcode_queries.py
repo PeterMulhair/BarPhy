@@ -53,6 +53,7 @@ def data_download(barcode_results):
         print('Excel file required as input')
         return None
     
+    os.makedirs('output', exist_ok=True)
     #Download data for query species from BOLD database
     with open(barcode_results + '.csv') as f:
         next(f)
@@ -73,7 +74,7 @@ def data_download(barcode_results):
                     try:
                         os.mkdir('output/' + specimen_ID)
                     except:
-                        shutil.rmdir('output/' + specimen_ID)
+                        shutil.rmtree('output/' + specimen_ID)
                         os.mkdir('output/' + specimen_ID)
                         
                     os.chdir('output/' + specimen_ID)
@@ -122,6 +123,7 @@ def data_download_user(query, species):
     sequence for the query species and related species specified
     '''
 
+    os.makedirs('output', exist_ok=True)
     sp_query = query.split('.fa')[0]
     if species.split('_')[1] == '':
         try:
