@@ -68,3 +68,9 @@ For `--query` runs, the query species will be labelled with `_query` in the outp
 <img src="https://github.com/PeterMulhair/BarcodePlacer/blob/master/data/example_tree.png" width="700" height="550">
 </p>
 </div>
+
+
+**To do**
+
+- Add R error output line
+- Label query tip in tree output image
