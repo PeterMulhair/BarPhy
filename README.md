@@ -17,7 +17,7 @@ This script is required when an expected species ID does not match the result sp
 * IQTree - [install](http://www.iqtree.org/doc/Quickstart)
 * R v3 - [install](https://cran.r-project.org/doc/manuals/r-release/R-admin.html)
 * Python modules; `pandas, os, glob, argparse, subprocess, ete3, Bio, joblib`. If you get an error for any of these, install using `pip` before running script.
-* R libraries; `ggtree, getopt`
+* R libraries; `ggtree v1.10, getopt`
 
 Clone repository locally using `git clone https://github.com/PeterMulhair/BarPhy.git`
 
