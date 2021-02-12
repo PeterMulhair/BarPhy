@@ -33,7 +33,7 @@ BarPhy can be run in two ways:
 
   - `python barcode_queries.py --query EXID.fasta REXID`
 
-The script also requires certain directories. Both require a dir called `output/`. To run the `--query` version, place your fasta files in a directory called `queries/`
+The script also requires certain directories. To run the `--query` version, place your fasta files in a directory called `queries/`
 
 **Output**
 
@@ -44,7 +44,6 @@ The tree image file, ending in .pdf, is what you want to check to see where your
 
 Using the fasta file from `queries/` you can ID the barcode sequences using the `--query` version (the `--barcode` version can be run using the excel sheet in `data/`)
 
-First make output dir with `mkdir output`
 
 Then run the script:
 
