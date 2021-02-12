@@ -21,6 +21,8 @@ This script is required when an expected species ID does not match the result sp
 
 Clone repository locally using `git clone https://github.com/PeterMulhair/BarPhy.git`
 
+**Note** this script is built to run on a linux system
+
 ## Usage
 
 BarPhy can be run in two ways:
