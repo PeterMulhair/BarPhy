@@ -3,6 +3,7 @@ import pandas as pd
 import os
 import glob
 import argparse
+import shutil
 from subprocess import call as unix
 from ete3 import Tree
 from Bio import SeqIO
@@ -52,6 +53,7 @@ def data_download(barcode_results):
         print('Excel file required as input')
         return None
     
+    os.makedirs('output', exist_ok=True)
     #Download data for query species from BOLD database
     with open(barcode_results + '.csv') as f:
         next(f)
@@ -68,8 +70,13 @@ def data_download(barcode_results):
 
                     #Save specimen IDs to list
                     query_list.append(specimen_ID)
-                    
-                    os.mkdir('output/' + specimen_ID)
+
+                    try:
+                        os.mkdir('output/' + specimen_ID)
+                    except:
+                        shutil.rmtree('output/' + specimen_ID)
+                        os.mkdir('output/' + specimen_ID)
+                        
                     os.chdir('output/' + specimen_ID)
 
                     with open(specimen_ID + '_query.fasta', 'w') as outF:
@@ -116,12 +123,21 @@ def data_download_user(query, species):
     sequence for the query species and related species specified
     '''
 
+    os.makedirs('output', exist_ok=True)
     sp_query = query.split('.fa')[0]
     if species.split('_')[1] == '':
-        os.mkdir('output/' + sp_query + '_genus_query')
+        try:
+            os.mkdir('output/' + sp_query + '_genus_query')
+        except:
+            shutil.rmtree('output/' + sp_query + '_genus_query')
+            os.mkdir('output/' + sp_query + '_genus_query')
         os.chdir('output/' + sp_query + '_genus_query')
     else:
-        os.mkdir('output/' + sp_query + '_query')
+        try:
+            os.mkdir('output/' + sp_query + '_query')
+        except:
+            shutil.rmtree('output/' + sp_query + '_query')
+            os.mkdir('output/' + sp_query + '_query')
         os.chdir('output/' + sp_query + '_query')
         
     with open('../../queries/' + query) as f, open(sp_query + '_query.fasta', 'w') as outF:
