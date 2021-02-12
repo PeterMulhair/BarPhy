@@ -75,4 +75,5 @@ For `--query` runs, the query species will be labelled with `_query` in the outp
 **To do**
 
 - Add R error output line
+- Install local ggtree for user (conda ggtree not compatible)
 - Label query tip in tree output image
