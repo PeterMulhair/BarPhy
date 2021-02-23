@@ -63,7 +63,7 @@ $ python barcode_queries.py --query queries/Melangyna_labiatarum.fasta Melangyna
 
 **Output**
 
-For `--query` runs, the query species will be labelled with `_query` in the output tree image (labelled with `_DToL` in `--barcode` version). 
+For `--query` runs, the query species will be labelled with `_query` and coloured blue in the output tree image (labelled with `_DToL` in `--barcode` version). 
 
 <div align="center">
 <p align="center">
@@ -76,4 +76,4 @@ For `--query` runs, the query species will be labelled with `_query` in the outp
 
 - Add R error output line
 - Install local ggtree for user (conda ggtree not compatible)
-~~- Label query tip in tree output image~~
+- ~~Label query tip in tree output image~~
