@@ -13,8 +13,8 @@ tree <- read.tree(opt$phylo)
 
 #Create tree object
 if(tree$Nnode<80) {
-p <- ggtree(tree) + geom_tiplab(offset = 0.00001, aes(color=grepl("query", label)))
-} else {p <- ggtree(tree, layout="circular") + geom_tiplab2(aes(color=grepl("query", label)))}
+p <- ggtree(tree) + geom_tiplab(offset = 0.00001, aes(color=grepl("DToL|query", label)))
+} else {p <- ggtree(tree, layout="circular") + geom_tiplab2(aes(color=grepl("DToL|query", label)))}
 
 
 #Write tree to pdf
