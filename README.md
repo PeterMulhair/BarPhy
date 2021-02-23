@@ -67,7 +67,7 @@ For `--query` runs, the query species will be labelled with `_query` in the outp
 
 <div align="center">
 <p align="center">
-<img src="https://github.com/PeterMulhair/BarcodePlacer/blob/master/data/example_tree.png" width="700" height="550">
+<img src="https://github.com/PeterMulhair/BarcodePlacer/blob/main/data/example_tree.png" width="700" height="550">
 </p>
 </div>
 
