@@ -34,6 +34,8 @@ parse.add_argument("--query", action="append", nargs="+")
 args = parse.parse_args()
 
 query_list = []
+#func_pass = 0
+
 
 def data_download(barcode_results):
     '''
@@ -70,54 +72,63 @@ def data_download(barcode_results):
             flag = lines[14]
             if flag == 'C':#Currently just parsing cases where barcode is flagged as yellow and has at least genus level hit
                 if result_sp.split('_') != ['', '']:
+                    with open('barphy_results.csv', 'a+') as outBar:
+                        outBar.write(specimen_ID + ',' + expected_sp + ',' + result_sp + '\n')
 
-                    #Save specimen IDs to list
-                    query_list.append(specimen_ID)
-                    
-                    try:
-                        os.mkdir('output/' + specimen_ID)
-                    except:
-                        shutil.rmtree('output/' + specimen_ID)
-                        os.mkdir('output/' + specimen_ID)
-                        
-                    os.chdir('output/' + specimen_ID)
-                        
-                    with open(specimen_ID + '_query.fasta', 'w') as outF:
-                        outF.write('>' + expected_sp + '_DToL' + '\n' + DNA + '\n')
+                    if expected_sp.split('_')[1] == 'sp':
+                        with open('queries/' + specimen_ID + '_' + expected_sp + '.fasta', 'w') as outF_B:
+                            outF_B.write('>' + expected_sp + '|' + specimen_ID + '\n' + DNA + '\n')
 
-                    expected_sp_BOLD = lines[6].title() + '%20' + lines[7]
-                    result_sp_BOLD = lines[10].title() + '%20' + lines[11]
+                    else:
+                        #Save specimen IDs to list
+                        query_list.append(specimen_ID)
 
-                    #Download barcode sequences from BOLD
-                    print('Downloading barcode data from BOLD (boldsystems.org)...')
-                    unix('wget -q --show-progress  http://www.boldsystems.org/index.php/API_Public/sequence?taxon=' + expected_sp_BOLD, shell=True)
-                    unix('wget -q --show-progress http://www.boldsystems.org/index.php/API_Public/sequence?taxon=' + result_sp_BOLD, shell=True)
+                        try:
+                            os.mkdir('output/' + specimen_ID)
+                        except:
+                            shutil.rmtree('output/' + specimen_ID)
+                            os.mkdir('output/' + specimen_ID)
 
-                    for bold in glob.glob('sequence*'):
-                        sp_fasta = bold.split('=')[1]
-                        sp_fasta = sp_fasta.replace(' ', '_')
-                        bold = bold.replace(' ', '\ ')
-                        unix('mv ' + bold + ' ' + sp_fasta + '.fas', shell=True)
+                        os.chdir('output/' + specimen_ID)
 
-                    #Combine BOLD barcode seqs with DToL query barcode seq
-                    unix('cat *fas >> ' + specimen_ID + '_query.fasta', shell=True)
+                        with open(specimen_ID + '_query.fasta', 'w') as outF:
+                            outF.write('>' + expected_sp + '_DToL' + '\n' + DNA + '\n')
 
-                    #Remove duplicate sequences from the fasta file 
-                    with open(specimen_ID + '_query.fasta') as f, open(specimen_ID + '_query.fa', 'w') as outF:
-                        bold_id_dict = {}
-                        for record in SeqIO.parse(f, 'fasta'):
-                            ID = record.description
-                            seq = str(record.seq)
-                            if ID not in bold_id_dict.keys():
-                                bold_id_dict[ID] = seq
+                        expected_sp_BOLD = lines[6].title() + '%20' + lines[7]
+                        result_sp_BOLD = lines[10].title() + '%20' + lines[11]
 
-                        for k, v in bold_id_dict.items():
-                            if ('COI' in k) or ('DToL' in k):
-                                outF.write('>' + k + '\n' + v + '\n')
+                        #Download barcode sequences from BOLD
+                        print('Downloading barcode data from BOLD (boldsystems.org)...')
+                        unix('wget -q --show-progress  http://www.boldsystems.org/index.php/API_Public/sequence?taxon=' + expected_sp_BOLD, shell=True)
+                        unix('wget -q --show-progress http://www.boldsystems.org/index.php/API_Public/sequence?taxon=' + result_sp_BOLD, shell=True)
 
-                    os.chdir('../../')
+                        for bold in glob.glob('sequence*'):
+                            sp_fasta = bold.split('=')[1]
+                            sp_fasta = sp_fasta.replace(' ', '_')
+                            bold = bold.replace(' ', '\ ')
+                            unix('mv ' + bold + ' ' + sp_fasta + '.fas', shell=True)
+
+                        #Combine BOLD barcode seqs with DToL query barcode seq
+                        unix('cat *fas >> ' + specimen_ID + '_query.fasta', shell=True)
+
+                        #Remove duplicate sequences from the fasta file 
+                        with open(specimen_ID + '_query.fasta') as f, open(specimen_ID + '_query.fa', 'w') as outF:
+                            bold_id_dict = {}
+                            for record in SeqIO.parse(f, 'fasta'):
+                                ID = record.description
+                                seq = str(record.seq)
+                                if ID not in bold_id_dict.keys():
+                                    bold_id_dict[ID] = seq
+
+                            for k, v in bold_id_dict.items():
+                                if ('COI' in k) or ('DToL' in k):
+                                    outF.write('>' + k + '\n' + v + '\n')
+
+                        os.chdir('../../')
                     
             elif flag == 'B':
+                with open('barphy_results.csv', 'a+') as outBar:
+                    outBar.write(specimen_ID + ',' + expected_sp + ',' + result_sp + '\n')
                 with open('queries/' + specimen_ID + '_' + expected_sp + '.fasta', 'w') as outF_B:
                     outF_B.write('>' + expected_sp + '|' + specimen_ID + '\n' + DNA + '\n')
                              
@@ -237,15 +248,20 @@ def tree_build(query):
         Nnodes = rtre.nnodes
 
         colorlist = ["#de2d26" if ("query" in tip) or ("DToL" in tip) else "#000000" for tip in rtre.get_tip_labels()]
+        #colorlist = ["#de2d26" if "DToL" in tip else "#000000" for tip in rtre.get_tip_labels()]
         if Nnodes < 80:
             canvas, axes, mark  = rtre.draw(tip_labels_align=True, tip_labels_colors=colorlist, width=1000, height=1000, tip_labels_style={"font-size": "15px"});
         elif Nnodes < 600:
-            canvas, axes, mark  = rtre.draw(tip_labels_colors=colorlist, edge_widths=0.1, layout='c', edge_type='p', width=800, height=800, tip_labels_style={"font-size": "2px"});
+            #canvas, axes, mark  = rtre.draw(tip_labels_colors=colorlist, edge_widths=0.1, layout='c', edge_type='p', width=800, height=800, tip_labels_style={"font-size": "2px"});
+            canvas, axes, mark  = rtre.draw(tip_labels_colors=colorlist, tip_labels_align=True, width=1000, height=5000, tip_labels_style={"font-size": "15px"});
         else:
-            canvas, axes, mark  = rtre.draw(tip_labels_colors=colorlist, edge_widths=0.1, layout='c', edge_type='p', width=600, height=600, tip_labels_style={"font-size": "1px"});
+            canvas, axes, mark  = rtre.draw(tip_labels_colors=colorlist, tip_labels_align=True, width=1000, height=8000, tip_labels_style={"font-size": "15px"});
+            #canvas, axes, mark  = rtre.draw(tip_labels_colors=colorlist, edge_widths=0.1, layout='c', edge_type='p', width=600, height=600, tip_labels_style={"font-size": "1px"});
             
         toyplot.pdf.render(canvas, queryID + "_tree.pdf")
 
+        #unix('Rscript ' + pwd + '/plot_tree.R -t ' + rooted_tree + ' -o ' + queryID + '_tree.pdf > /dev/null 2>&1', shell=True)
+        #unix('Rscript ' + pwd + '/plot_tree.R -t ' + rooted_tree + ' -o ' + queryID + '_tree.pdf', shell=True)
     os.chdir(pwd)
 
 
@@ -253,7 +269,7 @@ def tree_build(query):
 if args.barcode:#If parsing barcode excel file, run pipeline
     data_download(args.barcode)
     
-    Parallel(n_jobs=5)(delayed(tree_build)('output/' + query) for query in query_list)
+    Parallel(n_jobs=10)(delayed(tree_build)('output/' + query) for query in query_list)
     print('\n\n\nComplete; output directories for batch job  can be found in output/')
     
 else:#If using specific queries, run pipeline
