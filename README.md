@@ -76,7 +76,7 @@ For `--query` runs, the query species will be labelled with `_query` and coloure
 **To do**
 
 - Make compatible for windows
-- ~~Replace tree plotting script with [toytree]~(https://toytree.readthedocs.io/en/latest/8-styling.html)~~
+- ~~Replace tree plotting script with [toytree]~~
 - Add check for species not on BOLD
 - ~~Add R error output line~~
 - Install local ggtree for user (conda ggtree not compatible)
