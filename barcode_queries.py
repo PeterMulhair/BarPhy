@@ -2,8 +2,12 @@
 import pandas as pd
 import os
 import glob
-import argparse
+import toytree
+import toyplot
+import toyplot.pdf
+import numpy as np
 import shutil
+import argparse
 from subprocess import call as unix
 from ete3 import Tree
 from Bio import SeqIO
@@ -30,8 +34,6 @@ parse.add_argument("--query", action="append", nargs="+")
 args = parse.parse_args()
 
 query_list = []
-#func_pass = 0
-
 
 def data_download(barcode_results):
     '''
@@ -50,10 +52,11 @@ def data_download(barcode_results):
         barcode_results = args.barcode.split('.csv')[0]
     else:
         print('Error:')
-        print('Excel file required as input')
+        print('Excel or csv file required as input for --barcode')
         return None
-    
+
     os.makedirs('output', exist_ok=True)
+    os.makedirs('queries', exist_ok=True)
     #Download data for query species from BOLD database
     with open(barcode_results + '.csv') as f:
         next(f)
@@ -65,12 +68,12 @@ def data_download(barcode_results):
             DNA = lines[15]
            
             flag = lines[14]
-            if flag == 'yellow':#Currently just parsing cases where barcode is flagged as yellow and has at least genus level hit
+            if flag == 'C':#Currently just parsing cases where barcode is flagged as yellow and has at least genus level hit
                 if result_sp.split('_') != ['', '']:
 
                     #Save specimen IDs to list
                     query_list.append(specimen_ID)
-
+                    
                     try:
                         os.mkdir('output/' + specimen_ID)
                     except:
@@ -78,7 +81,7 @@ def data_download(barcode_results):
                         os.mkdir('output/' + specimen_ID)
                         
                     os.chdir('output/' + specimen_ID)
-
+                        
                     with open(specimen_ID + '_query.fasta', 'w') as outF:
                         outF.write('>' + expected_sp + '_DToL' + '\n' + DNA + '\n')
 
@@ -111,9 +114,14 @@ def data_download(barcode_results):
                         for k, v in bold_id_dict.items():
                             if ('COI' in k) or ('DToL' in k):
                                 outF.write('>' + k + '\n' + v + '\n')
-                                
-                            
+
                     os.chdir('../../')
+                    
+            elif flag == 'B':
+                with open('queries/' + specimen_ID + '_' + expected_sp + '.fasta', 'w') as outF_B:
+                    outF_B.write('>' + expected_sp + '|' + specimen_ID + '\n' + DNA + '\n')
+                             
+
 
 def data_download_user(query, species):
     '''
@@ -122,7 +130,7 @@ def data_download_user(query, species):
     or genus to search against from BOLD database. Gets barcode
     sequence for the query species and related species specified
     '''
-
+    
     os.makedirs('output', exist_ok=True)
     sp_query = query.split('.fa')[0]
     if species.split('_')[1] == '':
@@ -139,7 +147,9 @@ def data_download_user(query, species):
             shutil.rmtree('output/' + sp_query + '_query')
             os.mkdir('output/' + sp_query + '_query')
         os.chdir('output/' + sp_query + '_query')
-        
+
+                                                                            
+
     with open('../../queries/' + query) as f, open(sp_query + '_query.fasta', 'w') as outF:
         for record in SeqIO.parse(f, 'fasta'):
             ID = record.description
@@ -193,7 +203,7 @@ def midpoint_root(tree):
     #Write rooted tree to file
     t.write(format=1, outfile = tree + ".rooted")
       
-
+    
 def tree_build(query):
     '''
     Created multiple sequence alignments from
@@ -212,8 +222,8 @@ def tree_build(query):
         print('\n')
         unix('mafft --quiet ' + fa + ' > ' + fa.split('.')[0] + '.mft', shell=True)  
         #unix('mafft --maxiterate 1000 --localpair ' + fa + ' > ' + fa.split('.')[0] + '.mft', shell=True)
-        unix('iqtree -quiet -s ' + fa.split('.')[0] + '.mft', shell=True)
-        #unix('iqtree -quiet -m GTR+G -s ' + fa.split('.')[0] + '.mft', shell=True)
+        #unix('iqtree -quiet -s ' + fa.split('.')[0] + '.mft', shell=True)
+        unix('iqtree -quiet -m GTR+G -s ' + fa.split('.')[0] + '.mft', shell=True)
         
     #Midpoint rooting to root the gene tree
     for tree in glob.glob("*.treefile"):
@@ -222,9 +232,22 @@ def tree_build(query):
     #Create pdf file with tree image
     for rooted_tree in glob.glob("*.rooted"):
         queryID = query.split('/')[-1]
-        unix('Rscript ' + pwd + '/plot_tree.R -t ' + rooted_tree + ' -o ' + queryID + '_tree.pdf > /dev/null 2>&1', shell=True)
-    
+
+        rtre = toytree.tree(rooted_tree)
+        Nnodes = rtre.nnodes
+
+        colorlist = ["#de2d26" if ("query" in tip) or ("DToL" in tip) else "#000000" for tip in rtre.get_tip_labels()]
+        if Nnodes < 80:
+            canvas, axes, mark  = rtre.draw(tip_labels_align=True, tip_labels_colors=colorlist, width=1000, height=1000, tip_labels_style={"font-size": "15px"});
+        elif Nnodes < 600:
+            canvas, axes, mark  = rtre.draw(tip_labels_colors=colorlist, edge_widths=0.1, layout='c', edge_type='p', width=800, height=800, tip_labels_style={"font-size": "2px"});
+        else:
+            canvas, axes, mark  = rtre.draw(tip_labels_colors=colorlist, edge_widths=0.1, layout='c', edge_type='p', width=600, height=600, tip_labels_style={"font-size": "1px"});
+            
+        toyplot.pdf.render(canvas, queryID + "_tree.pdf")
+
     os.chdir(pwd)
+
 
 
 if args.barcode:#If parsing barcode excel file, run pipeline
@@ -236,15 +259,15 @@ if args.barcode:#If parsing barcode excel file, run pipeline
 else:#If using specific queries, run pipeline
     query_sp = args.query[0][0]
     query_sp2 = args.query[0][1]
-
+    
     query_sp = query_sp.split('/')[-1]
     
     data_download_user(query_sp, query_sp2)
-
+    
     if query_sp2.split('_')[1] == '':
         tree_build('output/' + query_sp.split('.fa')[0] + '_genus_query')
         print('\nComplete; output files can be found in output/' + query_sp.split('.fa')[0] + '_genus_query')
     else:
         tree_build('output/' + query_sp.split('.fa')[0] + '_query')
         print('\nComplete; output files can be found in output/' + query_sp.split('.fa')[0] + '_query')
-
+        
