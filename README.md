@@ -16,6 +16,7 @@ This script is required when an expected species ID does not match the result sp
 * Mafft - [install](https://mafft.cbrc.jp/alignment/software/source.html)
 * IQTree - [install](http://www.iqtree.org/doc/Quickstart)
 * R v3 - [install](https://cran.r-project.org/doc/manuals/r-release/R-admin.html)
+* Toytree - [install](https://toytree.readthedocs.io/en/latest/3-installation.html)
 * Python modules; `pandas, os, glob, argparse, subprocess, ete3, Bio, joblib`. If you get an error for any of these, install using `pip` before running script.
 * R libraries; `ggtree v1.10` from [bioconductor](https://bioconductor.org/packages/release/bioc/html/ggtree.html), `getopt`
 
@@ -75,8 +76,8 @@ For `--query` runs, the query species will be labelled with `_query` and coloure
 **To do**
 
 - Make compatible for windows
-- Replace tree plotting script with [toytree](https://toytree.readthedocs.io/en/latest/8-styling.html)
+- ~~Replace tree plotting script with [toytree](https://toytree.readthedocs.io/en/latest/8-styling.html)
 - Add check for species not on BOLD
-- Add R error output line
+- ~~Add R error output line~~
 - Install local ggtree for user (conda ggtree not compatible)
 - ~~Label query tip in tree output image~~
