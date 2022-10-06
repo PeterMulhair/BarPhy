@@ -74,7 +74,7 @@ For `--query` runs, the query species will be labelled with `_query` and coloure
 
 <div align="center">
 <p align="center">
-<img src="https://github.com/PeterMulhair/BarPhy/blob/main/data/example_tree.png" width="700" height="550">
+<img src="https://github.com/PeterMulhair/BarPhy/blob/main/example/example_tree.png" width="700" height="550">
 </p>
 </div>
 
