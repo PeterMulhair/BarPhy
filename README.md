@@ -8,6 +8,11 @@
 </p>
 </div>
 
+
+:writing_hand: NOTE: Pipeline is under active development :writing_hand:
+
+---
+
 This script is required when an expected species ID does not match the result species/genus ID from a sequence similarity search against the [BOLD](https://www.boldsystems.org/index.php) database. It requires a merged barcode sequence as input, along with an expected species ID (**EXID**) and a result species/genus ID (**REXID**). Using the BOLD API it pulls down barcode data for EXID and REXID, creates a multiple sequence alignment, and uses maximum likelihood estimation to construct a phylogenetic tree. The output is a pdf image of the tree, where the identification of the barcode query can be confidently assigned in a phylogenetic context. 
 
 ## Requirements
