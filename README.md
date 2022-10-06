@@ -4,7 +4,7 @@
 
 <div align="center">
 <p align="center">
-<img src="https://github.com/PeterMulhair/BarcodePlacer/blob/main/example/barcode_logo.png" width="500" height="250">
+<img src="https://github.com/PeterMulhair/BarcodePlacer/blob/main/example/barcode_logo.png" width="500" height="230">
 </p>
 </div>
 
