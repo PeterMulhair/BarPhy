@@ -8,8 +8,9 @@
 </p>
 </div>
 
+---
 
-:writing_hand: NOTE: Pipeline is under active development :writing_hand:
+:sparkles: NOTE: Pipeline is under active development :writing_hand:
 
 ---
 
