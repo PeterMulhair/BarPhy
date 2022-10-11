@@ -1,5 +1,3 @@
-# BarPhy
-
 **Bar**code **Phy**logenetics
 
 <div align="center">
@@ -78,12 +76,3 @@ For `--query` runs, the query species will be labelled with `_query` and coloure
 </p>
 </div>
 
-
-**To do**
-
-- Make compatible for windows
-- Install local ggtree for user (conda ggtree not compatible)
-- Add check for species not on BOLD
-- ~~Replace tree plotting script with [toytree]~~
-- ~~Add R error output line~~
-- ~~Label query tip in tree output image~~
