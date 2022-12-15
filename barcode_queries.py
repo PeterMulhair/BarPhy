@@ -144,7 +144,7 @@ def data_download_user(query, species):
     
     os.makedirs('output', exist_ok=True)
     sp_query = query.split('.fa')[0]
-    if species.split('_')[1] == '':
+    if len(species) > 1:
         try:
             os.mkdir('output/' + sp_query + '_genus_query')
         except:
@@ -152,12 +152,20 @@ def data_download_user(query, species):
             os.mkdir('output/' + sp_query + '_genus_query')
         os.chdir('output/' + sp_query + '_genus_query')
     else:
-        try:
-            os.mkdir('output/' + sp_query + '_query')
-        except:
-            shutil.rmtree('output/' + sp_query + '_query')
-            os.mkdir('output/' + sp_query + '_query')
-        os.chdir('output/' + sp_query + '_query')
+        if species.split('_')[1] == '':
+            try:
+                os.mkdir('output/' + sp_query + '_genus_query')
+            except:
+                shutil.rmtree('output/' + sp_query + '_genus_query')
+                os.mkdir('output/' + sp_query + '_genus_query')
+            os.chdir('output/' + sp_query + '_genus_query')
+        else:
+            try:
+                os.mkdir('output/' + sp_query + '_query')
+            except:
+                shutil.rmtree('output/' + sp_query + '_query')
+                os.mkdir('output/' + sp_query + '_query')
+            os.chdir('output/' + sp_query + '_query')
 
                                                                             
 
@@ -169,11 +177,15 @@ def data_download_user(query, species):
             outF.write('>' + ID + '_query' + '\n' + seq + '\n')
             
     expected_sp_BOLD = sp_query.split('_')[0].title() + '%20' + sp_query.split('_')[1]
-    sister_sp_BOLD = species.split('_')[0].title() + '%20' + species.split('_')[1]
-
-    #Download barcode sequences from BOLD
-    unix('wget http://www.boldsystems.org/index.php/API_Public/sequence?taxon=' + expected_sp_BOLD, shell=True)
-    unix('wget http://www.boldsystems.org/index.php/API_Public/sequence?taxon=' + sister_sp_BOLD, shell=True)
+    if len(species) > 1:
+        for sp_name in species:
+            sister_sp_BOLD = sp_name.split('_')[0].title() + '%20' + sp_name.split('_')[1]
+            unix('wget http://www.boldsystems.org/index.php/API_Public/sequence?taxon=' + sister_sp_BOLD, shell=True)
+    else:
+        sister_sp_BOLD = species.split('_')[0].title() + '%20' + species.split('_')[1]
+        #Download barcode sequences from BOLD
+        #unix('wget http://www.boldsystems.org/index.php/API_Public/sequence?taxon=' + expected_sp_BOLD, shell=True)
+        unix('wget http://www.boldsystems.org/index.php/API_Public/sequence?taxon=' + sister_sp_BOLD, shell=True)
     
     for bold in glob.glob('sequence*'):
         sp_fasta = bold.split('=')[1]
@@ -231,11 +243,12 @@ def tree_build(query):
         print('Constructing MSA and phylogenetic tree...')
         print('(If this step fails, see log files for what went wrong)')
         print('\n')
-        unix('mafft --quiet ' + fa + ' > ' + fa.split('.')[0] + '.mft', shell=True)  
+        unix('mafft --quiet ' + fa + ' > ' + fa.split('.')[0] + '.mft', shell=True)
+        unix('trimal -in ' + fa.split('.')[0] + '.mft -out ' + fa.split('.')[0] + '.trim.mft -gappyout', shell=True)
         #unix('mafft --maxiterate 1000 --localpair ' + fa + ' > ' + fa.split('.')[0] + '.mft', shell=True)
-        #unix('iqtree -quiet -s ' + fa.split('.')[0] + '.mft', shell=True)
-        unix('iqtree -quiet -m GTR+G -s ' + fa.split('.')[0] + '.mft', shell=True)
-        
+        #unix('iqtree -s ' + fa.split('.')[0] + '.trim.mft', shell=True)
+        unix('iqtree -quiet -m GTR+G -s ' + fa.split('.')[0] + '.trim.mft', shell=True)
+
     #Midpoint rooting to root the gene tree
     for tree in glob.glob("*.treefile"):
         midpoint_root(tree)
@@ -253,9 +266,9 @@ def tree_build(query):
             canvas, axes, mark  = rtre.draw(tip_labels_align=True, tip_labels_colors=colorlist, width=1000, height=1000, tip_labels_style={"font-size": "15px"});
         elif Nnodes < 600:
             #canvas, axes, mark  = rtre.draw(tip_labels_colors=colorlist, edge_widths=0.1, layout='c', edge_type='p', width=800, height=800, tip_labels_style={"font-size": "2px"});
-            canvas, axes, mark  = rtre.draw(tip_labels_colors=colorlist, tip_labels_align=True, width=1000, height=5000, tip_labels_style={"font-size": "15px"});
+            canvas, axes, mark  = rtre.draw(tip_labels_colors=colorlist, tip_labels_align=True, width=1000, height=5000, tip_labels_style={"font-size": "10px"});
         else:
-            canvas, axes, mark  = rtre.draw(tip_labels_colors=colorlist, tip_labels_align=True, width=1000, height=8000, tip_labels_style={"font-size": "15px"});
+            canvas, axes, mark  = rtre.draw(tip_labels_colors=colorlist, tip_labels_align=True, width=1000, height=8000, tip_labels_style={"font-size": "5px"});
             #canvas, axes, mark  = rtre.draw(tip_labels_colors=colorlist, edge_widths=0.1, layout='c', edge_type='p', width=600, height=600, tip_labels_style={"font-size": "1px"});
             
         toyplot.pdf.render(canvas, queryID + "_tree.pdf")
@@ -264,7 +277,7 @@ def tree_build(query):
         #unix('Rscript ' + pwd + '/plot_tree.R -t ' + rooted_tree + ' -o ' + queryID + '_tree.pdf', shell=True)
     os.chdir(pwd)
 
-
+#tree_build('output/gbroad_wasp_bracon_genus_query')
 
 if args.barcode:#If parsing barcode excel file, run pipeline
     data_download(args.barcode)
@@ -274,16 +287,20 @@ if args.barcode:#If parsing barcode excel file, run pipeline
     
 else:#If using specific queries, run pipeline
     query_sp = args.query[0][0]
-    query_sp2 = args.query[0][1]
+    query_sp2 = args.query[0][1:]
     
     query_sp = query_sp.split('/')[-1]
-    
+
     data_download_user(query_sp, query_sp2)
-    
-    if query_sp2.split('_')[1] == '':
+
+    if len(query_sp2) > 1:
         tree_build('output/' + query_sp.split('.fa')[0] + '_genus_query')
         print('\nComplete; output files can be found in output/' + query_sp.split('.fa')[0] + '_genus_query')
     else:
-        tree_build('output/' + query_sp.split('.fa')[0] + '_query')
-        print('\nComplete; output files can be found in output/' + query_sp.split('.fa')[0] + '_query')
+        if query_sp2.split('_')[1] == '':
+            tree_build('output/' + query_sp.split('.fa')[0] + '_genus_query')
+            print('\nComplete; output files can be found in output/' + query_sp.split('.fa')[0] + '_genus_query')
+        else:
+            tree_build('output/' + query_sp.split('.fa')[0] + '_query')
+            print('\nComplete; output files can be found in output/' + query_sp.split('.fa')[0] + '_query')
         
